@@ -9,6 +9,7 @@ import Icon from '@/components/ui/icon';
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const [isDownloadOpen, setIsDownloadOpen] = useState(false);
   const [discordOnline, setDiscordOnline] = useState<number | null>(null);
   const [telegramOnline, setTelegramOnline] = useState<number | null>(null);
 
@@ -43,6 +44,41 @@ const Index = () => {
       title: 'Aimbot',
       description: 'Автоматическое наведение на цели для точных ударов'
     }
+  ];
+
+  const plans = [
+    {
+      name: 'Beta',
+      price: 'Бесплатно',
+      duration: '30 дней',
+      features: ['Базовые функции', 'KillAura', 'ESP', 'Fly'],
+      badge: 'Пробная версия',
+      popular: false
+    },
+    {
+      name: 'Dev',
+      price: '499₽',
+      duration: '30 дней',
+      features: ['Все функции', 'Приоритетная поддержка', 'Обновления', 'Без рекламы', 'Обход всех античитов'],
+      badge: null,
+      popular: true
+    },
+    {
+      name: 'Premium',
+      price: '1499₽',
+      duration: 'Навсегда',
+      features: ['Все функции навсегда', 'VIP поддержка', 'Ранний доступ', 'Эксклюзивные модули', 'Кастомизация GUI'],
+      badge: 'Лучшее предложение',
+      popular: false
+    }
+  ];
+
+  const versions = [
+    { version: '1.8.9', status: 'Стабильная' },
+    { version: '1.12.2', status: 'Стабильная' },
+    { version: '1.16.5', status: 'Стабильная' },
+    { version: '1.19.4', status: 'Бета' },
+    { version: '1.20.x', status: 'Бета' }
   ];
 
   const faqs = [
@@ -159,10 +195,78 @@ const Index = () => {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Button size="lg" className="text-xl px-8 py-6 bg-primary hover:bg-primary/90 border-4 border-primary-foreground/20">
-              <Icon name="Download" className="mr-2" size={24} />
-              Скачать чит
-            </Button>
+            <Dialog open={isDownloadOpen} onOpenChange={setIsDownloadOpen}>
+              <DialogTrigger asChild>
+                <Button size="lg" className="text-xl px-8 py-6 bg-primary hover:bg-primary/90 border-4 border-primary-foreground/20">
+                  <Icon name="Download" className="mr-2" size={24} />
+                  Скачать чит
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-6xl w-full bg-card border-4 border-primary max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle className="text-3xl">Выберите тариф и версию</DialogTitle>
+                </DialogHeader>
+                
+                <div className="space-y-8 p-6">
+                  <div>
+                    <h3 className="text-2xl font-bold mb-6 text-center text-primary">Тарифные планы</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      {plans.map((plan, index) => (
+                        <Card 
+                          key={index}
+                          className={`relative bg-card border-4 ${plan.popular ? 'border-secondary scale-105' : 'border-primary/30'} hover:border-secondary transition-all cursor-pointer`}
+                        >
+                          {plan.badge && (
+                            <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-secondary-foreground">
+                              {plan.badge}
+                            </Badge>
+                          )}
+                          <CardHeader>
+                            <CardTitle className="text-3xl text-center">{plan.name}</CardTitle>
+                            <div className="text-center mt-4">
+                              <div className="text-4xl font-bold text-primary">{plan.price}</div>
+                              <div className="text-lg text-muted-foreground mt-2">{plan.duration}</div>
+                            </div>
+                          </CardHeader>
+                          <CardContent>
+                            <ul className="space-y-3">
+                              {plan.features.map((feature, idx) => (
+                                <li key={idx} className="flex items-start gap-2">
+                                  <Icon name="Check" className="text-secondary mt-1 flex-shrink-0" size={20} />
+                                  <span className="text-lg">{feature}</span>
+                                </li>
+                              ))}
+                            </ul>
+                            <Button className="w-full mt-6 text-lg py-6 border-2">
+                              Выбрать {plan.name}
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-2xl font-bold mb-6 text-center text-primary">Доступные версии Minecraft</h3>
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                      {versions.map((ver, index) => (
+                        <Card 
+                          key={index}
+                          className="bg-card border-4 border-primary/30 hover:border-primary transition-all cursor-pointer text-center"
+                        >
+                          <CardHeader>
+                            <CardTitle className="text-xl">{ver.version}</CardTitle>
+                            <Badge variant={ver.status === 'Стабильная' ? 'default' : 'secondary'}>
+                              {ver.status}
+                            </Badge>
+                          </CardHeader>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
             <Dialog open={isVideoOpen} onOpenChange={setIsVideoOpen}>
               <DialogTrigger asChild>
                 <Button size="lg" variant="outline" className="text-xl px-8 py-6 border-4">
