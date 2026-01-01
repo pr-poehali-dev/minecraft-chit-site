@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const [discordOnline, setDiscordOnline] = useState<number | null>(null);
 
   const features = [
     {
@@ -68,6 +70,22 @@ const Index = () => {
       answer: 'Да, наша команда всегда на связи в Discord и Telegram. Время ответа обычно до 2 часов. Также есть wiki с подробными инструкциями.'
     }
   ];
+
+  useEffect(() => {
+    const fetchDiscordOnline = async () => {
+      try {
+        const response = await fetch('https://discord.com/api/v10/invites/D35XpAJcrC?with_counts=true');
+        const data = await response.json();
+        setDiscordOnline(data.approximate_presence_count);
+      } catch (error) {
+        console.error('Failed to fetch Discord online count:', error);
+      }
+    };
+
+    fetchDiscordOnline();
+    const interval = setInterval(fetchDiscordOnline, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -245,7 +263,15 @@ const Index = () => {
             <Card className="bg-card border-4 border-primary/30 hover:border-secondary transition-all cursor-pointer">
               <CardHeader>
                 <Icon name="MessageCircle" className="mx-auto mb-4" size={48} />
-                <CardTitle className="text-2xl">Discord</CardTitle>
+                <CardTitle className="text-2xl flex items-center justify-center gap-2">
+                  Discord
+                  {discordOnline !== null && (
+                    <Badge variant="secondary" className="text-sm">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse"></div>
+                      {discordOnline} онлайн
+                    </Badge>
+                  )}
+                </CardTitle>
                 <CardDescription className="text-lg">
                   Присоединяйся к нашему серверу
                 </CardDescription>
