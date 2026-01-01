@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import Icon from '@/components/ui/icon';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
 
   const features = [
     {
@@ -126,10 +128,31 @@ const Index = () => {
               <Icon name="Download" className="mr-2" size={24} />
               Скачать чит
             </Button>
-            <Button size="lg" variant="outline" className="text-xl px-8 py-6 border-4">
-              <Icon name="Youtube" className="mr-2" size={24} />
-              Видео обзор
-            </Button>
+            <Dialog open={isVideoOpen} onOpenChange={setIsVideoOpen}>
+              <DialogTrigger asChild>
+                <Button size="lg" variant="outline" className="text-xl px-8 py-6 border-4">
+                  <Icon name="Youtube" className="mr-2" size={24} />
+                  Видео обзор
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-4xl w-full p-0 bg-card border-4 border-primary">
+                <DialogHeader className="p-6 pb-0">
+                  <DialogTitle className="text-2xl">Обзор Lirider.fun</DialogTitle>
+                </DialogHeader>
+                <div className="aspect-video w-full">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src="https://www.youtube.com/embed/qKVt_5_j3fw?start=4"
+                    title="Lirider.fun Обзор"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="rounded-b-lg"
+                  ></iframe>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
