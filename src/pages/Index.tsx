@@ -351,7 +351,7 @@ const Index = () => {
           <p className="text-xl mb-12 text-muted-foreground">
             Нужна помощь? Наша команда всегда на связи!
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
             <Card className="bg-card border-4 border-primary/30 hover:border-secondary transition-all cursor-pointer">
               <CardHeader>
                 <Icon name="MessageCircle" className="mx-auto mb-4" size={48} />
@@ -399,20 +399,6 @@ const Index = () => {
                   onClick={() => window.open('https://t.me/liriderclient', '_blank')}
                 >
                   Открыть канал
-                </Button>
-              </CardContent>
-            </Card>
-            <Card className="bg-card border-4 border-primary/30 hover:border-secondary transition-all cursor-pointer">
-              <CardHeader>
-                <Icon name="BookOpen" className="mx-auto mb-4" size={48} />
-                <CardTitle className="text-2xl">Wiki</CardTitle>
-                <CardDescription className="text-lg">
-                  База знаний и инструкции
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button className="w-full border-2">
-                  Открыть Wiki
                 </Button>
               </CardContent>
             </Card>
