@@ -49,36 +49,28 @@ const Index = () => {
   const plans = [
     {
       name: 'Beta',
-      price: 'Бесплатно',
-      duration: '30 дней',
-      features: ['Базовые функции', 'KillAura', 'ESP', 'Fly'],
-      badge: 'Пробная версия',
+      price: '700₽',
+      duration: 'Навсегда',
+      features: ['Базовые функции', 'KillAura', 'ESP', 'Fly', 'X-Ray'],
+      badge: null,
       popular: false
     },
     {
       name: 'Dev',
-      price: '499₽',
-      duration: '30 дней',
-      features: ['Все функции', 'Приоритетная поддержка', 'Обновления', 'Без рекламы', 'Обход всех античитов'],
-      badge: null,
+      price: '1000₽',
+      duration: 'Навсегда',
+      features: ['Все функции Beta', 'Приоритетная поддержка', 'Обновления', 'Без рекламы', 'Обход всех античитов', 'AntiKnockback'],
+      badge: 'Популярный',
       popular: true
     },
     {
-      name: 'Premium',
-      price: '1499₽',
+      name: 'Обычная',
+      price: '500₽',
       duration: 'Навсегда',
-      features: ['Все функции навсегда', 'VIP поддержка', 'Ранний доступ', 'Эксклюзивные модули', 'Кастомизация GUI'],
-      badge: 'Лучшее предложение',
+      features: ['Основные функции', 'KillAura', 'ESP', 'Стандартная поддержка', 'Обновления'],
+      badge: null,
       popular: false
     }
-  ];
-
-  const versions = [
-    { version: '1.8.9', status: 'Стабильная' },
-    { version: '1.12.2', status: 'Стабильная' },
-    { version: '1.16.5', status: 'Стабильная' },
-    { version: '1.19.4', status: 'Бета' },
-    { version: '1.20.x', status: 'Бета' }
   ];
 
   const faqs = [
@@ -202,67 +194,46 @@ const Index = () => {
                   Скачать чит
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-6xl w-full bg-card border-4 border-primary max-h-[90vh] overflow-y-auto">
+              <DialogContent className="max-w-5xl w-full bg-card border-4 border-primary max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                  <DialogTitle className="text-3xl">Выберите тариф и версию</DialogTitle>
+                  <DialogTitle className="text-3xl">Выберите тариф</DialogTitle>
                 </DialogHeader>
                 
-                <div className="space-y-8 p-6">
-                  <div>
-                    <h3 className="text-2xl font-bold mb-6 text-center text-primary">Тарифные планы</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      {plans.map((plan, index) => (
-                        <Card 
-                          key={index}
-                          className={`relative bg-card border-4 ${plan.popular ? 'border-secondary scale-105' : 'border-primary/30'} hover:border-secondary transition-all cursor-pointer`}
-                        >
-                          {plan.badge && (
-                            <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-secondary-foreground">
-                              {plan.badge}
-                            </Badge>
-                          )}
-                          <CardHeader>
-                            <CardTitle className="text-3xl text-center">{plan.name}</CardTitle>
-                            <div className="text-center mt-4">
-                              <div className="text-4xl font-bold text-primary">{plan.price}</div>
-                              <div className="text-lg text-muted-foreground mt-2">{plan.duration}</div>
-                            </div>
-                          </CardHeader>
-                          <CardContent>
-                            <ul className="space-y-3">
-                              {plan.features.map((feature, idx) => (
-                                <li key={idx} className="flex items-start gap-2">
-                                  <Icon name="Check" className="text-secondary mt-1 flex-shrink-0" size={20} />
-                                  <span className="text-lg">{feature}</span>
-                                </li>
-                              ))}
-                            </ul>
-                            <Button className="w-full mt-6 text-lg py-6 border-2">
-                              Выбрать {plan.name}
-                            </Button>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="text-2xl font-bold mb-6 text-center text-primary">Доступные версии Minecraft</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                      {versions.map((ver, index) => (
-                        <Card 
-                          key={index}
-                          className="bg-card border-4 border-primary/30 hover:border-primary transition-all cursor-pointer text-center"
-                        >
-                          <CardHeader>
-                            <CardTitle className="text-xl">{ver.version}</CardTitle>
-                            <Badge variant={ver.status === 'Стабильная' ? 'default' : 'secondary'}>
-                              {ver.status}
-                            </Badge>
-                          </CardHeader>
-                        </Card>
-                      ))}
-                    </div>
+                <div className="p-6">
+                  <h3 className="text-2xl font-bold mb-6 text-center text-primary">Тарифные планы</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {plans.map((plan, index) => (
+                      <Card 
+                        key={index}
+                        className={`relative bg-card border-4 ${plan.popular ? 'border-secondary scale-105' : 'border-primary/30'} hover:border-secondary transition-all cursor-pointer`}
+                      >
+                        {plan.badge && (
+                          <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-secondary-foreground">
+                            {plan.badge}
+                          </Badge>
+                        )}
+                        <CardHeader>
+                          <CardTitle className="text-3xl text-center">{plan.name}</CardTitle>
+                          <div className="text-center mt-4">
+                            <div className="text-4xl font-bold text-primary">{plan.price}</div>
+                            <div className="text-lg text-muted-foreground mt-2">{plan.duration}</div>
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          <ul className="space-y-3">
+                            {plan.features.map((feature, idx) => (
+                              <li key={idx} className="flex items-start gap-2">
+                                <Icon name="Check" className="text-secondary mt-1 flex-shrink-0" size={20} />
+                                <span className="text-lg">{feature}</span>
+                              </li>
+                            ))}
+                          </ul>
+                          <Button className="w-full mt-6 text-lg py-6 border-2">
+                            Выбрать {plan.name}
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    ))}
                   </div>
                 </div>
               </DialogContent>
