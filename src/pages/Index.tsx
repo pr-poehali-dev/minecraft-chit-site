@@ -51,7 +51,7 @@ const Index = () => {
       name: 'Beta',
       price: '700₽',
       duration: 'Навсегда',
-      features: ['Базовые функции', 'KillAura', 'ESP', 'Fly', 'X-Ray'],
+      features: ['Создание кастомного цвета', 'KillAura', 'ESP', 'Fly', 'X-Ray'],
       badge: null,
       popular: false
     },
