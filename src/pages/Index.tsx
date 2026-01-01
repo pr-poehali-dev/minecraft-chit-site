@@ -5,6 +5,22 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
+import CartButton from '@/components/CartButton';
+import { addToCart } from '@/lib/cart';
+import { toast } from '@/components/ui/use-toast';
+
+const API_URL = 'https://functions.poehali.dev/58157bac-8508-4720-85a0-89bae9d297a6';
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  duration: string;
+  features: string[];
+  badge: string | null;
+  is_popular: boolean;
+  is_active: boolean;
+}
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
@@ -12,6 +28,7 @@ const Index = () => {
   const [isDownloadOpen, setIsDownloadOpen] = useState(false);
   const [discordOnline, setDiscordOnline] = useState<number | null>(null);
   const [telegramOnline, setTelegramOnline] = useState<number | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
 
   const features = [
     {
@@ -46,32 +63,7 @@ const Index = () => {
     }
   ];
 
-  const plans = [
-    {
-      name: 'Beta',
-      price: '700₽',
-      duration: 'Навсегда',
-      features: ['Создание кастомного цвета', 'KillAura', 'ESP', 'Fly', 'X-Ray'],
-      badge: null,
-      popular: false
-    },
-    {
-      name: 'Dev',
-      price: '1000₽',
-      duration: 'Навсегда',
-      features: ['Все функции Beta', 'Приоритетная поддержка', 'Обновления', 'Без рекламы', 'Обход всех античитов', 'AntiKnockback'],
-      badge: 'Популярный',
-      popular: true
-    },
-    {
-      name: 'Обычная',
-      price: '500₽',
-      duration: 'Навсегда',
-      features: ['Основные функции', 'KillAura', 'ESP', 'Стандартная поддержка', 'Обновления'],
-      badge: null,
-      popular: false
-    }
-  ];
+
 
   const updates = [
     {
@@ -137,6 +129,16 @@ const Index = () => {
   ];
 
   useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(`${API_URL}?action=products`);
+        const data = await response.json();
+        setProducts(data.filter((p: Product) => p.is_active));
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
+      }
+    };
+
     const fetchDiscordOnline = async () => {
       try {
         const response = await fetch('https://discord.com/api/v10/invites/D35XpAJcrC?with_counts=true');
@@ -159,6 +161,7 @@ const Index = () => {
       }
     };
 
+    fetchProducts();
     fetchDiscordOnline();
     fetchTelegramOnline();
     const interval = setInterval(() => {
@@ -167,6 +170,16 @@ const Index = () => {
     }, 60000);
     return () => clearInterval(interval);
   }, []);
+
+  const handleAddToCart = (product: Product) => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      duration: product.duration,
+    });
+    toast({ title: `${product.name} добавлен в корзину` });
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -178,35 +191,38 @@ const Index = () => {
             </div>
             <h1 className="text-2xl font-bold text-primary">Lirider.fun</h1>
           </div>
-          <div className="hidden md:flex gap-6">
-            <Button 
-              variant={activeSection === 'home' ? 'default' : 'ghost'}
-              onClick={() => setActiveSection('home')}
-              className="text-lg"
-            >
-              Главная
-            </Button>
-            <Button 
-              variant={activeSection === 'features' ? 'default' : 'ghost'}
-              onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
-              className="text-lg"
-            >
-              Возможности
-            </Button>
-            <Button 
-              variant={activeSection === 'faq' ? 'default' : 'ghost'}
-              onClick={() => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })}
-              className="text-lg"
-            >
-              FAQ
-            </Button>
-            <Button 
-              variant={activeSection === 'support' ? 'default' : 'ghost'}
-              onClick={() => document.getElementById('support')?.scrollIntoView({ behavior: 'smooth' })}
-              className="text-lg"
-            >
-              Поддержка
-            </Button>
+          <div className="flex gap-4 items-center">
+            <div className="hidden md:flex gap-6">
+              <Button 
+                variant={activeSection === 'home' ? 'default' : 'ghost'}
+                onClick={() => setActiveSection('home')}
+                className="text-lg"
+              >
+                Главная
+              </Button>
+              <Button 
+                variant={activeSection === 'features' ? 'default' : 'ghost'}
+                onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+                className="text-lg"
+              >
+                Возможности
+              </Button>
+              <Button 
+                variant={activeSection === 'faq' ? 'default' : 'ghost'}
+                onClick={() => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })}
+                className="text-lg"
+              >
+                FAQ
+              </Button>
+              <Button 
+                variant={activeSection === 'support' ? 'default' : 'ghost'}
+                onClick={() => document.getElementById('support')?.scrollIntoView({ behavior: 'smooth' })}
+                className="text-lg"
+              >
+                Поддержка
+              </Button>
+            </div>
+            <CartButton />
           </div>
         </div>
       </nav>
@@ -238,34 +254,41 @@ const Index = () => {
                 <div className="p-6">
                   <h3 className="text-2xl font-bold mb-6 text-center text-primary">Тарифные планы</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {plans.map((plan, index) => (
+                    {products.map((product) => (
                       <Card 
-                        key={index}
-                        className={`relative bg-card border-4 ${plan.popular ? 'border-secondary scale-105' : 'border-primary/30'} hover:border-secondary transition-all cursor-pointer`}
+                        key={product.id}
+                        className={`relative bg-card border-4 ${product.is_popular ? 'border-secondary scale-105' : 'border-primary/30'} hover:border-secondary transition-all cursor-pointer`}
                       >
-                        {plan.badge && (
+                        {product.badge && (
                           <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-secondary-foreground">
-                            {plan.badge}
+                            {product.badge}
                           </Badge>
                         )}
                         <CardHeader>
-                          <CardTitle className="text-3xl text-center">{plan.name}</CardTitle>
+                          <CardTitle className="text-3xl text-center">{product.name}</CardTitle>
                           <div className="text-center mt-4">
-                            <div className="text-4xl font-bold text-primary">{plan.price}</div>
-                            <div className="text-lg text-muted-foreground mt-2">{plan.duration}</div>
+                            <div className="text-4xl font-bold text-primary">{product.price}₽</div>
+                            <div className="text-lg text-muted-foreground mt-2">{product.duration}</div>
                           </div>
                         </CardHeader>
                         <CardContent>
                           <ul className="space-y-3">
-                            {plan.features.map((feature, idx) => (
+                            {product.features.map((feature, idx) => (
                               <li key={idx} className="flex items-start gap-2">
                                 <Icon name="Check" className="text-secondary mt-1 flex-shrink-0" size={20} />
                                 <span className="text-lg">{feature}</span>
                               </li>
                             ))}
                           </ul>
-                          <Button className="w-full mt-6 text-lg py-6 border-2">
-                            Выбрать {plan.name}
+                          <Button 
+                            onClick={() => {
+                              handleAddToCart(product);
+                              setIsDownloadOpen(false);
+                            }}
+                            className="w-full mt-6 text-lg py-6 border-2"
+                          >
+                            <Icon name="ShoppingCart" className="mr-2" size={20} />
+                            В корзину
                           </Button>
                         </CardContent>
                       </Card>
