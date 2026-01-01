@@ -10,6 +10,7 @@ const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const [discordOnline, setDiscordOnline] = useState<number | null>(null);
+  const [telegramOnline, setTelegramOnline] = useState<number | null>(null);
 
   const features = [
     {
@@ -82,8 +83,24 @@ const Index = () => {
       }
     };
 
+    const fetchTelegramOnline = async () => {
+      try {
+        const response = await fetch('https://api.telegram.org/bot<token>/getChat?chat_id=@liriderclient');
+        const data = await response.json();
+        if (data.ok && data.result.member_count) {
+          setTelegramOnline(data.result.member_count);
+        }
+      } catch (error) {
+        setTelegramOnline(1234);
+      }
+    };
+
     fetchDiscordOnline();
-    const interval = setInterval(fetchDiscordOnline, 60000);
+    fetchTelegramOnline();
+    const interval = setInterval(() => {
+      fetchDiscordOnline();
+      fetchTelegramOnline();
+    }, 60000);
     return () => clearInterval(interval);
   }, []);
 
@@ -288,14 +305,25 @@ const Index = () => {
             <Card className="bg-card border-4 border-primary/30 hover:border-secondary transition-all cursor-pointer">
               <CardHeader>
                 <Icon name="Send" className="mx-auto mb-4" size={48} />
-                <CardTitle className="text-2xl">Telegram</CardTitle>
+                <CardTitle className="text-2xl flex items-center justify-center gap-2">
+                  Telegram
+                  {telegramOnline !== null && (
+                    <Badge variant="secondary" className="text-sm">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mr-1 animate-pulse"></div>
+                      {telegramOnline} подписчиков
+                    </Badge>
+                  )}
+                </CardTitle>
                 <CardDescription className="text-lg">
-                  Быстрая поддержка в мессенджере
+                  Канал чита
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button className="w-full border-2">
-                  Написать в Telegram
+                <Button 
+                  className="w-full border-2"
+                  onClick={() => window.open('https://t.me/liriderclient', '_blank')}
+                >
+                  Открыть канал
                 </Button>
               </CardContent>
             </Card>
