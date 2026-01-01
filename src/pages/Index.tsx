@@ -251,7 +251,10 @@ const Index = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button className="w-full border-2">
+                <Button 
+                  className="w-full border-2"
+                  onClick={() => window.open('https://discord.gg/D35XpAJcrC', '_blank')}
+                >
                   Открыть Discord
                 </Button>
               </CardContent>
