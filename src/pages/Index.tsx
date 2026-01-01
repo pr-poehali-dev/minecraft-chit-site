@@ -73,6 +73,42 @@ const Index = () => {
     }
   ];
 
+  const updates = [
+    {
+      version: 'v2.4.1',
+      date: '15 декабря 2024',
+      title: 'Обновление обхода античитов',
+      changes: [
+        'Улучшен обход Vulcan 2.8.x',
+        'Добавлена поддержка Grim AC',
+        'Исправлены баги KillAura',
+        'Оптимизация производительности'
+      ]
+    },
+    {
+      version: 'v2.4.0',
+      date: '1 декабря 2024',
+      title: 'Новые функции и улучшения',
+      changes: [
+        'Добавлен Velocity модуль',
+        'Новый GUI дизайн',
+        'Улучшен X-Ray рендеринг',
+        'Добавлены кастомные цвета'
+      ]
+    },
+    {
+      version: 'v2.3.5',
+      date: '20 ноября 2024',
+      title: 'Исправления и стабильность',
+      changes: [
+        'Исправлен краш на 1.20.x',
+        'Улучшена стабильность Fly',
+        'Оптимизация ESP',
+        'Исправлены мелкие баги'
+      ]
+    }
+  ];
+
   const faqs = [
     {
       question: 'С какими версиями Minecraft совместим чит?',
@@ -319,7 +355,46 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="faq" className="py-20 px-4">
+      <section id="updates" className="py-20 px-4">
+        <div className="container mx-auto max-w-5xl">
+          <h3 className="text-5xl font-bold text-center mb-12 text-primary">
+            Последние обновления
+          </h3>
+          <div className="space-y-6">
+            {updates.map((update, index) => (
+              <Card 
+                key={index}
+                className="bg-card border-4 border-primary/20 hover:border-primary transition-all"
+              >
+                <CardHeader>
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                      <div className="flex items-center gap-3 mb-2">
+                        <Badge className="text-lg px-3 py-1">{update.version}</Badge>
+                        <span className="text-muted-foreground">{update.date}</span>
+                      </div>
+                      <CardTitle className="text-2xl">{update.title}</CardTitle>
+                    </div>
+                    <Icon name="Package" size={48} className="text-primary" />
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2">
+                    {update.changes.map((change, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <Icon name="CheckCircle2" className="text-secondary mt-1 flex-shrink-0" size={20} />
+                        <span className="text-lg">{change}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="faq" className="py-20 px-4 bg-muted/30">
         <div className="container mx-auto max-w-4xl">
           <h3 className="text-5xl font-bold text-center mb-12 text-primary">
             Вопросы и ответы
